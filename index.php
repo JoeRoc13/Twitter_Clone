@@ -11,6 +11,9 @@ $stmt->execute();
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 echo "1. Find the post that has the most number of likes: <br  />" . $row["body"];
 
+echo "<br />";
+echo "<br />";
+
 /*
   Query 2
  */
@@ -18,6 +21,77 @@ $stmt = $db->prepare("SELECT username FROM user WHERE uid = (SELECT following_id
 $stmt->execute();
 
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-echo "<br />2. Find the person who has the most number of followers: <br  />" . $row["username"];
+echo "2. Find the person who has the most number of followers: <br  />" . $row["username"];
+
+echo "<br />";
+echo "<br />";
+
+/*
+  Query 3
+ */
+$stmt = $db->prepare("SELECT user.username, user.location, twitts.body FROM user, twitts WHERE user.uid = twitts.uid AND twitts.body LIKE '%flu%' ORDER BY user.location");
+$stmt->execute();
+echo "3. Count the number of posts that contains the keyword “flu”, display the location of the users who have made the posts as well (use “GROUP BY location”): <br  />";
+$count = 0;
+echo "<table border='1'>
+        <tr>
+          <th>Username</td>
+          <th>Body</td>
+          <th>Location</td>
+        </tr>";
+while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+  echo "<tr><td>" . $row["username"] . "</td><td>" . $row["body"] . "</td><td>" . $row["location"] . '</td></tr>';
+  $count++;
+}
+echo "</table>";
+echo "Count: " . $count;
+
+echo "<br />";
+echo "<br />";
+
+/*
+  Query 4
+ */
+echo "4. User input a person’s twitter name, find all the posts made by that person: <br  />";
+echo "<form action='index.php' method='post'>
+Enter a username: <input type='text' name='username'><br />
+<input type='submit'>
+</form>";
+
+if(isset($_POST["username"])) {
+  $stmt = $db->prepare("SELECT uid FROM user WHERE username = '" .$_POST["username"] . "'");
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  $uid = $row["uid"];
+
+  $stmt = $db->prepare("SELECT body FROM twitts WHERE uid = '" . $uid . "'");
+  $stmt->execute();
+  while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    echo $row["body"] . "<br  />";
+  }
+}
+
+echo "<br />";
+
+/*
+  Query 5
+ */
+echo "5. User input a year, find the person who twits the most in that year: <br  />";
+ echo "<form action='index.php' method='post'>
+ Enter a year: <input type='text' name='year'><br />
+ <input type='submit'>
+ </form>";
+
+ if(isset($_POST["year"])) {
+   $year = $_POST["year"];
+   $stmt = $db->prepare("SELECT username FROM user WHERE uid = (SELECT uid FROM twitts GROUP BY uid ORDER BY count(*) DESC LIMIT 1) AND uid IN (SELECT uid FROM twitts WHERE post_time >= '" . $year . "-01-01' AND post_time < '" . $year . "-12-31')");
+   $stmt->execute();
+   while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+     echo $row["username"] . "<br  />";
+   }
+ }
+
+echo "<br />";
+echo "<br />";
 
 ?>
