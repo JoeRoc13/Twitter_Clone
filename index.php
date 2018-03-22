@@ -1,7 +1,10 @@
 <?php
 
+include('./header.php');
+
 $db = new PDO('mysql:host=localhost;dbname=twitter', 'root', '');
 
+echo "<div class='container'>";
 /*
   Query 1
  */
@@ -9,7 +12,7 @@ $stmt = $db->prepare("SELECT body FROM twitts WHERE tid = (SELECT MAX(tid) AS mo
 $stmt->execute();
 
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-echo "1. Find the post that has the most number of likes: <br  />" . $row["body"];
+echo "<b>1. Find the post that has the most number of likes:</b> <br  />" . $row["body"];
 
 echo "<br />";
 echo "<br />";
@@ -21,7 +24,7 @@ $stmt = $db->prepare("SELECT username FROM user WHERE uid = (SELECT following_id
 $stmt->execute();
 
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
-echo "2. Find the person who has the most number of followers: <br  />" . $row["username"];
+echo "<b>2. Find the person who has the most number of followers:</b> <br  />" . $row["username"];
 
 echo "<br />";
 echo "<br />";
@@ -31,14 +34,14 @@ echo "<br />";
  */
 $stmt = $db->prepare("SELECT user.username, user.location, twitts.body FROM user, twitts WHERE user.uid = twitts.uid AND twitts.body LIKE '%flu%' ORDER BY user.location");
 $stmt->execute();
-echo "3. Count the number of posts that contains the keyword “flu”, display the location of the users who have made the posts as well (use “GROUP BY location”): <br  />";
+echo "<b>3. Count the number of posts that contains the keyword “flu”, display the location of the users who have made the posts as well (use “GROUP BY location”):</b> <br  />";
 $count = 0;
-echo "<table border='1'>
-        <tr>
+echo "<table class='table table-striped'>
+        <thead>
           <th>Username</td>
           <th>Body</td>
           <th>Location</td>
-        </tr>";
+        </thead>";
 while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
   echo "<tr><td>" . $row["username"] . "</td><td>" . $row["body"] . "</td><td>" . $row["location"] . '</td></tr>';
   $count++;
@@ -52,11 +55,21 @@ echo "<br />";
 /*
   Query 4
  */
-echo "4. User input a person’s twitter name, find all the posts made by that person: <br  />";
-echo "<form action='index.php' method='post'>
-Enter a username: <input type='text' name='username'><br />
-<input type='submit'>
-</form>";
+echo "<b>4. User input a person’s twitter name, find all the posts made by that person:</b> <br  />";
+echo '<div class="row">
+        <div class="col-md-6">
+          <form action="index.php" method="post">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" name="username" class="form-control" placeholder="Enter a username">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit">Go!</button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>';
 
 if(isset($_POST["username"])) {
   $stmt = $db->prepare("SELECT uid FROM user WHERE username = '" .$_POST["username"] . "'");
@@ -76,11 +89,22 @@ echo "<br />";
 /*
   Query 5
  */
-echo "5. User input a year, find the person who twits the most in that year: <br  />";
- echo "<form action='index.php' method='post'>
- Enter a year: <input type='text' name='year'><br />
- <input type='submit'>
- </form>";
+echo "<b>5. User input a year, find the person who twits the most in that year:</b> <br  />";
+echo '<div class="row">
+        <div class="col-md-6">
+          <form action="index.php" method="post">
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" name="year" class="form-control" placeholder="Enter a year">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" type="submit">Go!</button>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>';
+
 
  if(isset($_POST["year"])) {
    $year = $_POST["year"];
@@ -93,5 +117,7 @@ echo "5. User input a year, find the person who twits the most in that year: <br
 
 echo "<br />";
 echo "<br />";
+
+echo "</div>";
 
 ?>
