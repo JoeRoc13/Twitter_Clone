@@ -23,15 +23,33 @@
   $(document).ready(function(){
     autosize($('textarea'));
 
-    $("textarea").keypress(function (e) {
-        if(e.which == 13) {
-          if($.trim($(this).val())) {
-            $("#chatbox").append($(this).val() + "<br/>");
-            $(this).val("");
-            e.preventDefault();
-          }
+    $('#twittBody').keydown(function(e){
+      if (e.keyCode == 13 && !e.shiftKey) {
+        if($('#twittBody').val().trim() != ""){
+          e.preventDefault();
+          $('#formTwitt').submit();
         }
+      }
     });
+
+    // $(document).on('keydown', '.commentBody', function(e){
+    //   if (e.keyCode == 13 && !e.shiftKey) {
+    //     if($('.commentBody').val().trim() != ""){
+    //       e.preventDefault();
+    //       $(this).parent()[0].submit();
+    //     }
+    //   }
+    // });
+
+     $(".commentBody").keydown(function(e){
+       if (e.keyCode == 13 && !e.shiftKey) {
+           if($(this).val().trim() != ""){
+             e.preventDefault();
+             $(this).parent()[0].submit();
+           }
+         }
+     });
+
   });
 
 </script>

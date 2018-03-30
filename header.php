@@ -1,6 +1,8 @@
 <?php
   session_start();
   $get_root = "/Twitter_Clone";
+  $db = new PDO('mysql:host=localhost;dbname=twitter', 'root', '');
+  $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 ?>
 
 <!DOCTYPE html>
@@ -37,10 +39,12 @@
           <li><a href="<?php echo $get_root;?>/general.php">General</a></li>
           <?php if(isset($_SESSION["_userdata"])) { ?>
             <li><a href="<?php echo $get_root;?>/messages.php">Messages</a></li>
+            <li><a href="<?php echo $get_root;?>/follow.php">Follow</a></li>
           <?php }?>
         </ul>
         <ul class="nav navbar-nav navbar-right">
           <?php if(isset($_SESSION["_userdata"])) { ?>
+            <li><a href="#"><?= $_SESSION["_userdata"]["username"] ?></a></li>
             <li><a href="<?php echo $get_root;?>/logout.php"><span class="glyphicon glyphicon-user"></span> Log out</a></li>
           <?php } else {  ?>
             <li><a href="<?php echo $get_root;?>/signup.php"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>

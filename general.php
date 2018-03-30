@@ -2,8 +2,6 @@
 
 include('./header.php');
 
-$db = new PDO('mysql:host=localhost;dbname=twitter', 'root', '');
-
 echo "<div class='container'>";
 /*
   Query 1
@@ -58,7 +56,7 @@ echo "<br />";
 echo "<b>4. User input a person’s twitter name, find all the posts made by that person:</b> <br  />";
 echo '<div class="row">
         <div class="col-md-6">
-          <form action="index.php" method="post">
+          <form action="general.php" method="post">
             <div class="form-group">
               <div class="input-group">
                 <input type="text" name="username" class="form-control" placeholder="Enter a username">
@@ -92,7 +90,7 @@ echo "<br />";
 echo "<b>5. User input a year, find the person who twits the most in that year:</b> <br  />";
 echo '<div class="row">
         <div class="col-md-6">
-          <form action="index.php" method="post">
+          <form action="general.php" method="post">
             <div class="form-group">
               <div class="input-group">
                 <input type="text" name="year" class="form-control" placeholder="Enter a year">

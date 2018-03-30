@@ -1,7 +1,6 @@
 <?php
   include('./header.php');
   if(isset($_SESSION["_userdata"])){
-    $db = new PDO('mysql:host=localhost;dbname=twitter', 'root', '');
     $uid = $_SESSION["_userdata"]["uid"];
     $stmt = $db->prepare("SELECT * from message where receiver_id = '" . $uid . "'");
     $stmt->execute();
@@ -25,7 +24,7 @@
       }
     } else {
       echo '<div class="container">
-              <h1>You have no messages..... nerd!</h1>
+              <h1>Your message box is empty.</h1>
             </div>';
     }
 

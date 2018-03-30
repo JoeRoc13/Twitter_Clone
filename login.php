@@ -1,10 +1,9 @@
 <?php
 include('./header.php');
-if(isset($_POST["username"]) && $_POST["password"]){
-  $db = new PDO('mysql:host=localhost;dbname=twitter', 'root', '');
+if(isset($_POST["username"]) && isset($_POST["password"])) {
   $username = $_POST["username"];
   $password = $_POST["password"];
-  $stmt = $db->prepare("SELECT * from user where username = '" . $username . "'");
+  $stmt = $db->prepare("SELECT * FROM user WHERE username = '" . $username . "'");
 
   $stmt->execute();
 
@@ -13,7 +12,7 @@ if(isset($_POST["username"]) && $_POST["password"]){
 
   if($password == $row['password']){
       $_SESSION["_userdata"] = $row;
-      header("Location: ./profile.php");
+      header("Location: ./index.php");
   } else {
     echo "Wrong Password";
   }

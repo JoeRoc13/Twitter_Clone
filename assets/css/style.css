@@ -1,0 +1,19 @@
+.btn-like {
+  padding: 2px 12px !important;
+}
+
+.post-badge {
+  margin-top: 2px !important;
+}
+
+.panel {
+	position:relative;
+}
+
+input {
+  width: 100% !important;
+}
+
+#btnSignUp {
+  width: 100%;
+}

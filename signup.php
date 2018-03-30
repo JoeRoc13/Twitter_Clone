@@ -1,22 +1,18 @@
 <?php
 include('./header.php');
-if(isset($_POST["username"]) && $_POST["password"]){
-  $db = new PDO('mysql:host=localhost;dbname=twitter', 'root', '');
+if(isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["location"])) {
+  $email = $_POST["email"];
   $username = $_POST["username"];
   $password = $_POST["password"];
-  $stmt = $db->prepare("SELECT * from user where username = '" . $username . "'");
+  $location = $_POST["location"];
 
+  $stmt = $db->prepare("INSERT INTO user (username, password, email, location, regis_date) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+  $stmt->bindValue(1, $username);
+  $stmt->bindValue(2, $password);
+  $stmt->bindValue(3, $email);
+  $stmt->bindValue(4, $location);
   $stmt->execute();
-
-
-  $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-  if($password == $row['password']){
-      $_SESSION["_userdata"] = $row;
-      header("Location: ./profile.php");
-  } else {
-    echo "Wrong Password";
-  }
+  header("Location: ./login.php");
 }
 
  ?>
@@ -32,16 +28,11 @@ if(isset($_POST["username"]) && $_POST["password"]){
 			<h2>Join today.</h2>
 			<br />
       <p class="alert alert-danger" id="error-msg" hidden></p>
-			<form data-toggle="validator" role="form" id="formSignUp" method="post">
+			<form data-toggle="validator" role="form" id="formSignUp" method="post" action="signup.php">
 				<div class="form-group">
 			    <label for="inputEmail" class="control-label">Email</label>
 			    <input name="email" type="email" pattern="[A-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$" class="form-control" id="email" placeholder="Email" data-error="Invalid Email address." required>
 			    <div class="help-block with-errors"></div>
-			  </div>
-			  <div class="form-group">
-			    <label for="inputName" class="control-label">Name</label>
-			    <input name="name" type="text" class="form-control" id="name" placeholder="John Doe" required>
-			    <div class="help-block-with-errors"></div>
 			  </div>
 			  <div class="form-group">
 			    <label for="inputUsername" class="control-label">Username</label>
@@ -61,11 +52,16 @@ if(isset($_POST["username"]) && $_POST["password"]){
 			      </div>
 			    </div>
 			  </div>
+        <div class="form-group">
+			    <label for="inputLocation" class="control-label">Location</label>
+			    <input name="location" type="text" class="form-control" id="location" placeholder="e.g. Lowell, MA" required>
+			    <div class="help-block with-errors"></div>
+			  </div>
 			  <div class="form-group">
 			    <button id="btnSignUp" type="submit" class="btn btn-primary">Submit</button>
 			  </div>
 			</form>
-			<div class="small">By signing up, you agree to the <a href='./legal/terms'>Terms of Service</a> and <a href='./legal/privacy'>Privacy Policy</a>.</div>
+			<div class="small">By signing up, you agree to the <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>.</div>
     </div>
   </body>
 </html>
