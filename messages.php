@@ -2,7 +2,9 @@
   include('./header.php');
   if(isset($_SESSION["_userdata"])){
     $uid = $_SESSION["_userdata"]["uid"];
-    $stmt = $db->prepare("SELECT * from message where receiver_id = '" . $uid . "'");
+    $stmt = $db->prepare("SELECT *
+                          FROM message
+                          WHERE receiver_id = '" . $uid . "'");
     $stmt->execute();
 
 
@@ -17,7 +19,9 @@
               </thead>";
 
       while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $stmt2 = $db->prepare("SELECT username from user where uid = '" . $row["sender_id"] . "'");
+        $stmt2 = $db->prepare("SELECT username
+                               FROM user
+                               WHERE uid = '" . $row["sender_id"] . "'");
         $stmt2->execute();
         $sender_name = $stmt2->fetchColumn();
         echo "<tr><td>" . $sender_name . "</td><td>" . $row["body"] . "</td><td>" . $row["send_time"] . '</td></tr>';

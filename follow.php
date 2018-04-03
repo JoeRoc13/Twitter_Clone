@@ -2,21 +2,28 @@
 
 include('./header.php');
 
-$stmt = $db->prepare("SELECT * FROM user WHERE uid != " . $_SESSION["_userdata"]["uid"]);
+$stmt = $db->prepare("SELECT *
+                      FROM user
+                      WHERE uid != " . $_SESSION["_userdata"]["uid"]);
 $stmt->execute();
 
+// Fetch other_uid and action from URL
 if(isset($_GET["other_uid"]) && isset($_GET["action"])) {
   $other_uid = $_GET["other_uid"];
+  // If the action is to follow a user, use a INSERT statement, else use a DELETE statement
   switch($_GET["action"]) {
     case "follow":
-      $follow = $db->prepare("INSERT INTO follow (follower_id, following_id, follow_time) VALUES (?, ?, CURRENT_TIMESTAMP)");
+      $follow = $db->prepare("INSERT INTO follow (follower_id, following_id, follow_time)
+                              VALUES (?, ?, CURRENT_TIMESTAMP)");
       $follow->bindValue(1, $_SESSION["_userdata"]["uid"]);
       $follow->bindValue(2, $other_uid);
       $follow->execute();
       header("Location: ./follow.php");
       break;
     case "unfollow":
-      $unfollow = $db->prepare("DELETE FROM follow WHERE follower_id = ? AND following_id = ?");
+      $unfollow = $db->prepare("DELETE FROM follow
+                                WHERE follower_id = ?
+                                AND following_id = ?");
       $unfollow->bindValue(1, $_SESSION["_userdata"]["uid"]);
       $unfollow->bindValue(2, $other_uid);
       $unfollow->execute();
@@ -35,7 +42,9 @@ if(isset($_GET["other_uid"]) && isset($_GET["action"])) {
     <br>
     <table class="table table-striped">
       <?php
-        $getFollowingIDs = $db->prepare("SELECT following_id FROM follow WHERE follower_id = " . $_SESSION["_userdata"]["uid"]);
+        $getFollowingIDs = $db->prepare("SELECT following_id
+                                         FROM follow
+                                         WHERE follower_id = " . $_SESSION["_userdata"]["uid"]);
         $getFollowingIDs->execute();
         $followingArray = $getFollowingIDs->fetchAll(PDO::FETCH_COLUMN);
         while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

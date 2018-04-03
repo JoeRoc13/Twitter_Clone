@@ -1,5 +1,8 @@
 <?php
 include('./header.php');
+
+// Check to see if username and password is set, if it is, check to see if account exists
+// and password is correct
 if(isset($_POST["username"]) && isset($_POST["password"])) {
   $username = $_POST["username"];
   $password = $_POST["password"];

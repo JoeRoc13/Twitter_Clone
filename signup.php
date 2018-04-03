@@ -6,7 +6,8 @@ if(isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["password
   $password = $_POST["password"];
   $location = $_POST["location"];
 
-  $stmt = $db->prepare("INSERT INTO user (username, password, email, location, regis_date) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
+  $stmt = $db->prepare("INSERT INTO user (username, password, email, location, regis_date)
+                        VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)");
   $stmt->bindValue(1, $username);
   $stmt->bindValue(2, $password);
   $stmt->bindValue(3, $email);

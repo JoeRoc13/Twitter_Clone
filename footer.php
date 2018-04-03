@@ -32,15 +32,6 @@
       }
     });
 
-    // $(document).on('keydown', '.commentBody', function(e){
-    //   if (e.keyCode == 13 && !e.shiftKey) {
-    //     if($('.commentBody').val().trim() != ""){
-    //       e.preventDefault();
-    //       $(this).parent()[0].submit();
-    //     }
-    //   }
-    // });
-
      $(".commentBody").keydown(function(e){
        if (e.keyCode == 13 && !e.shiftKey) {
            if($(this).val().trim() != ""){

@@ -5,18 +5,22 @@ include('./header.php');
 $stmt = $db->prepare("SELECT * from twitts");
 $stmt->execute();
 
+// If $_POST["twitt"] exists, insert a new tweet into the database
 if(isset($_POST["twitt"])) {
-  $stmt_twitt = $db->prepare("INSERT INTO twitts (uid, body, post_time) VALUES (?, ?, CURRENT_TIMESTAMP)");
+  $stmt_twitt = $db->prepare("INSERT INTO twitts (uid, body, post_time)
+                              VALUES (?, ?, CURRENT_TIMESTAMP)");
   $stmt_twitt->bindValue(1, $_SESSION["_userdata"]["uid"]);
   $stmt_twitt->bindValue(2, $_POST["twitt"]);
   $stmt_twitt->execute();
 }
 
+// If $_POST["comment"] exists, insert a new comment into the database
 if(isset($_POST["comment"])) {
   $comment = $_POST["comment"];
   $twittID = $_POST["twittID"];
 
-  $postComment = $db->prepare("INSERT INTO comment (uid, tid, body, comment_time) VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
+  $postComment = $db->prepare("INSERT INTO comment (uid, tid, body, comment_time)
+                               VALUES (?, ?, ?, CURRENT_TIMESTAMP)");
   $postComment->bindValue(1, $_SESSION["_userdata"]["uid"]);
   $postComment->bindValue(2, $twittID);
   $postComment->bindValue(3, $comment);
@@ -27,6 +31,7 @@ echo "</div>";
 
 ?>
 
+<!-- If userdata is set show page, else redirect to general.php  -->
 <?php if(isset($_SESSION["_userdata"])) { ?>
 <div class="container">
   <div class="col-md-6 col-md-offset-3">
