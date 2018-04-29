@@ -1,22 +1,17 @@
 <?php
   include('./header.php');
-  if(isset($_SESSION["_userdata"])){
-    $uid = $_SESSION["_userdata"]["uid"];
+
+  if(isset($_POST["uid"])) {
+    $uid = $_POST["uid"];
     $stmt = $db->prepare("SELECT *
                           FROM message
-                          WHERE receiver_id = '" . $uid . "'");
+                          WHERE receiver_id = '" . $uid . "'
+                          ORDER BY send_time DESC");
     $stmt->execute();
 
+    $response = array();
 
     if($stmt->rowCount() > 0) {
-      echo '<div class="container">
-              <h1>Messages</h1>';
-      echo "<table class='table table-striped'>
-              <thead>
-                <th>From</td>
-                <th>Body</td>
-                <th>Date</td>
-              </thead>";
 
       while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $stmt2 = $db->prepare("SELECT username
@@ -24,16 +19,22 @@
                                WHERE uid = '" . $row["sender_id"] . "'");
         $stmt2->execute();
         $sender_name = $stmt2->fetchColumn();
-        echo "<tr><td>" . $sender_name . "</td><td>" . $row["body"] . "</td><td>" . $row["send_time"] . '</td></tr>';
-      }
-    } else {
-      echo '<div class="container">
-              <h1>Your message box is empty.</h1>
-            </div>';
-    }
 
-    echo '</div>';
-  } else {
-    header("Location: ./login.php");
+        $response["success"] = true;
+          $response["messages"][] = array(
+            "sender_id" => $row["sender_id"],
+            "sender_name" => $sender_name,
+            "body" => $row["body"],
+            "send_time" => $row["send_time"]
+          );
+      }
+
+    } else {
+      $response = array(
+        "success" => false,
+        "error" => "No messages"
+      );
+    }
+    echo json_encode($response);
   }
 ?>
